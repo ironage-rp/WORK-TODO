@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Closing Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
+
+  /* DARK MODE (default) */
+  :root {
+    --bg: #0f0f0f;
+    --bg2: #1a1a1a;
+    --bg3: #242424;
+    --bg4: #2e2e2e;
+    --border: #333;
+    --border2: #444;
+    --text: #f0f0f0;
+    --text2: #aaa;
+    --text3: #666;
+    --accent: #e8c56d;
+    --accent2: #c9a84c;
+    --green: #5cb87a;
+    --green2: #3d9158;
+    --red: #e05555;
+    --blue: #5b9bd5;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  /* LIGHT MODE */
+  body.light-mode {
+    --bg: #f5f4f0;
+    --bg2: #ffffff;
+    --bg3: #f0ede8;
+    --bg4: #e8e4de;
+    --border: #e0dbd2;
+    --border2: #c8c2b8;
+    --text: #1a1a1a;
+    --text2: #5a5550;
+    --text3: #a09890;
+    --accent: #b8862a;
+    --accent2: #9a6e1e;
+    --green: #2e8a50;
+    --green2: #1f6638;
+    --red: #c0392b;
+    --blue: #2874a6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.25s, color 0.25s;
+  }
+
+  /* HEADER */
+  .app-header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .restaurant-name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .header-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+
+  /* TABS */
+  .tab-bar {
+    display: flex;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 20px;
+    transition: background 0.25s;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* CONTENT */
+  .tab-content { display: none; flex: 1; overflow-y: auto; }
+  .tab-content.active { display: block; }
+
+  /* RECORD TAB */
+  .record-section { padding: 16px 20px; }
+
+  .name-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    transition: background 0.25s;
+  }
+  .name-label {
+    font-size: 12px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+  .name-input {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    outline: none;
+  }
+  .name-input::placeholder { color: var(--text3); }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: var(--bg3);
+    border-radius: 100px;
+    height: 6px;
+    margin-bottom: 6px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green2), var(--green));
+    border-radius: 100px;
+    transition: width 0.4s ease;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--text2);
+    text-align: right;
+    margin-bottom: 16px;
+  }
+
+  /* CHECKLIST */
+  .checklist-section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+    padding: 0 4px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    margin-bottom: 6px;
+    transition: background 0.15s, border-color 0.15s;
+    user-select: none;
+  }
+  .check-item.completed {
+    background: var(--bg3);
+    border-color: var(--border);
+  }
+  .check-item.completed .check-text {
+    color: var(--text3);
+    text-decoration: line-through;
+  }
+
+  .check-box {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border2);
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .check-box.checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .check-box svg { display: none; }
+  .check-box.checked svg { display: block; }
+
+  .check-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    color: var(--text);
+    transition: color 0.15s;
+  }
+
+  .check-del-btn {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 16px;
+    line-height: 1;
+    transition: color 0.15s;
+    flex-shrink: 0;
+  }
+  .check-del-btn:hover { color: var(--red); }
+
+  /* SCHEDULED ITEMS */
+  .scheduled-section { margin-top: 20px; }
+  .scheduled-section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    padding: 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .scheduled-section-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .check-item.scheduled-item {
+    border-color: rgba(184, 134, 42, 0.25);
+    background: rgba(184, 134, 42, 0.06);
+  }
+  body:not(.light-mode) .check-item.scheduled-item {
+    border-color: rgba(232, 197, 109, 0.2);
+    background: rgba(232, 197, 109, 0.05);
+  }
+
+  /* ADD ITEM */
+  .add-item-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .add-item-input {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s, background 0.25s;
+  }
+  .add-item-input:focus { border-color: var(--border2); }
+  .add-item-input::placeholder { color: var(--text3); }
+  .add-btn {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  body:not(.light-mode) .add-btn { color: #000; }
+  .add-btn:hover { background: var(--accent2); }
+
+  /* SAVE BUTTON */
+  .save-btn-wrap { padding: 16px 20px; }
+  .save-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--green);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: background 0.15s;
+  }
+  .save-btn:hover { background: var(--green2); }
+
+  /* HISTORY TAB */
+  .history-empty {
+    text-align: center;
+    color: var(--text3);
+    padding: 60px 20px;
+    font-size: 14px;
+  }
+  .history-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin: 12px 20px;
+    overflow: hidden;
+    transition: background 0.25s;
+  }
+  .history-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .history-card-header.open { border-bottom-color: var(--border); }
+  .history-card-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .history-card-meta { display: flex; align-items: center; gap: 12px; }
+  .history-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-weight: 500;
+  }
+  .badge-green { background: rgba(46,138,80,0.15); color: var(--green); }
+  .badge-amber { background: rgba(184,134,42,0.15); color: var(--accent); }
+  .history-worker { font-size: 12px; color: var(--text2); }
+  .history-chevron { color: var(--text3); font-size: 12px; transition: transform 0.2s; }
+  .history-chevron.open { transform: rotate(180deg); }
+  .history-card-body { display: none; padding: 12px 16px; }
+  .history-card-body.open { display: block; }
+  .history-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .history-item-row:last-child { border-bottom: none; }
+  .history-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-done { background: var(--green); }
+  .dot-undone { background: var(--border2); }
+
+  /* SETTINGS TAB */
+  .settings-section { padding: 16px 20px; }
+  .settings-group {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 20px;
+    transition: background 0.25s;
+  }
+  .settings-group-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 12px 16px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-label { font-size: 14px; color: var(--text); }
+  .settings-sublabel { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .settings-input {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    outline: none;
+    width: 180px;
+    text-align: right;
+    transition: background 0.25s;
+  }
+  .settings-input::placeholder { color: var(--text3); }
+
+  /* TOGGLE SWITCH */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toggle-switch {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    top: 3px;
+    background: var(--text3);
+    border-radius: 50%;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-slider {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+    background: #fff;
+  }
+  body.light-mode .toggle-switch input:checked + .toggle-slider::before { background: #fff; }
+  .toggle-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 20px;
+  }
+  .toggle-status.on { color: var(--accent); }
+
+  .schedule-card-btn {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px dashed var(--border2);
+    border-radius: var(--radius);
+    padding: 20px;
+    color: var(--text2);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .schedule-card-btn:hover {
+    background: var(--bg4);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  body.light-mode .modal-overlay { background: rgba(0,0,0,0.4); }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius) var(--radius) 0 0;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 20px;
+    animation: slideUp 0.25s ease;
+    transition: background 0.25s;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .modal-title { font-size: 16px; font-weight: 700; }
+  .modal-close {
+    background: var(--bg3);
+    border: none;
+    color: var(--text2);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .day-tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+  .day-tab {
+    flex: 1;
+    min-width: 36px;
+    padding: 7px 4px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+  .day-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  body:not(.light-mode) .day-tab.active { color: #000; }
+
+  .day-items-list { margin-bottom: 12px; }
+  .day-item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-item-text { flex: 1; font-size: 14px; }
+  .day-item-del {
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    transition: color 0.15s;
+  }
+  .day-item-del:hover { color: var(--red); }
+  .day-empty { color: var(--text3); font-size: 13px; padding: 16px 0; text-align: center; }
+
+  .modal-add-row { display: flex; gap: 8px; margin-top: 8px; }
+  .modal-add-input {
+    flex: 1;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: background 0.25s;
+  }
+  .modal-add-input::placeholder { color: var(--text3); }
+  .modal-add-btn {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  body:not(.light-mode) .modal-add-btn { color: #000; }
+
+  .modal-save-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 13px;
+    background: var(--green);
+    border: none;
+    border-radius: var(--radius);
+    color: #fff;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    font-size: 13px;
+    color: var(--text);
+    z-index: 2000;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <div class="restaurant-name" id="headerRestaurantName">DAILY RESTAURANT</div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+  <div class="header-title" id="headerTitle">마감 체크리스트</div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" id="tabBtn-record" onclick="switchTab('record')">기록</button>
+  <button class="tab-btn" id="tabBtn-history" onclick="switchTab('history')">히스토리</button>
+  <button class="tab-btn" id="tabBtn-settings" onclick="switchTab('settings')">설정</button>
+</div>
+
+<!-- RECORD TAB -->
+<div class="tab-content active" id="tab-record">
+  <div class="record-section">
+    <div class="name-row">
+      <span class="name-label" id="lbl-worker">담당자</span>
+      <input class="name-input" id="workerName" type="text" placeholder="이름을 입력하세요" />
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 / 0 완료</div>
+    <div class="checklist-section-label" id="lbl-todayChecklist">오늘의 체크리스트</div>
+    <div id="checklistContainer"></div>
+    <div class="add-item-row">
+      <input class="add-item-input" id="newItemInput" type="text" placeholder="항목 추가..." />
+      <button class="add-btn" id="btn-add" onclick="addItem()">추가</button>
+    </div>
+    <div class="scheduled-section" id="scheduledSection" style="display:none">
+      <div class="scheduled-section-label" id="scheduledLabel"></div>
+      <div id="scheduledContainer"></div>
+    </div>
+  </div>
+  <div class="save-btn-wrap">
+    <button class="save-btn" id="btn-save" onclick="saveRecord()">✓ 오늘 마감 기록 저장</button>
+  </div>
+</div>
+
+<!-- HISTORY TAB -->
+<div class="tab-content" id="tab-history">
+  <div id="historyContainer">
+    <div class="history-empty" id="lbl-noHistory">아직 저장된 기록이 없습니다.</div>
+  </div>
+</div>
+
+<!-- SETTINGS TAB -->
+<div class="tab-content" id="tab-settings">
+  <div class="settings-section">
+
+    <div class="settings-group">
+      <div class="settings-group-title" id="lbl-grp-restaurant">레스토랑 정보</div>
+      <div class="settings-row">
+        <div class="settings-label" id="lbl-restaurantName">레스토랑 이름</div>
+        <input class="settings-input" id="restaurantNameInput" type="text" placeholder="이름 입력" />
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title" id="lbl-grp-display">디스플레이</div>
+      <div class="settings-row">
+        <div>
+          <div class="settings-label" id="lbl-langToggle">영어 모드</div>
+          <div class="settings-sublabel" id="lbl-langSub">UI를 영어로 표시합니다</div>
+        </div>
+        <div class="toggle-wrap">
+          <span class="toggle-status" id="langStatus">OFF</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleLang" onchange="applyLang()" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div>
+          <div class="settings-label" id="lbl-themeToggle">라이트 모드</div>
+          <div class="settings-sublabel" id="lbl-themeSub">밝은 테마로 전환합니다</div>
+        </div>
+        <div class="toggle-wrap">
+          <span class="toggle-status" id="themeStatus">OFF</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggleTheme" onchange="applyTheme()" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title" id="lbl-grp-schedule">요일별 특별 항목</div>
+      <div class="settings-row" style="flex-direction:column; align-items:stretch; gap:0; padding:16px;">
+        <button class="schedule-card-btn" id="btn-scheduleOpen" onclick="openScheduleModal()">
+          <span>📅</span> <span id="lbl-scheduleBtn">요일별 특별 항목 관리</span>
+        </button>
+        <div id="schedulePreview" style="color:var(--text3);font-size:12px;text-align:center;"></div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-group-title" id="lbl-grp-appinfo">앱 정보</div>
+      <div class="settings-row">
+        <div class="settings-label" id="lbl-version">버전</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);">v1.1.0</div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-label" id="lbl-build">빌드</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);">Daily Closing Checklist</div>
+      </div>
+      <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+        <div class="settings-label" id="lbl-reset">데이터 초기화</div>
+        <div class="settings-sublabel" id="lbl-resetSub">모든 기록과 설정이 삭제됩니다</div>
+        <button id="btn-resetAll" onclick="resetAll()" style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);color:var(--red);border-radius:var(--radius-sm);padding:8px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;">전체 초기화</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SCHEDULE MODAL -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">요일별 특별 항목</div>
+      <button class="modal-close" onclick="closeScheduleModal()">✕</button>
+    </div>
+    <div class="day-tabs" id="dayTabs"></div>
+    <div class="day-items-list" id="dayItemsList"></div>
+    <div class="modal-add-row">
+      <input class="modal-add-input" id="dayItemInput" type="text" placeholder="항목 입력..." />
+      <button class="modal-add-btn" id="btn-dayAdd" onclick="addDayItem()">추가</button>
+    </div>
+    <button class="modal-save-btn" id="btn-modalSave" onclick="saveSchedule()">저장</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== TRANSLATIONS ===== */
+const T = {
+  ko: {
+    headerTitle: '마감 체크리스트',
+    tab_record: '기록',
+    tab_history: '히스토리',
+    tab_settings: '설정',
+    lbl_worker: '담당자',
+    placeholder_worker: '이름을 입력하세요',
+    placeholder_addItem: '항목 추가...',
+    btn_add: '추가',
+    btn_save: '✓ 오늘 마감 기록 저장',
+    lbl_todayChecklist: '오늘의 체크리스트',
+    lbl_noHistory: '아직 저장된 기록이 없습니다.',
+    lbl_grp_restaurant: '레스토랑 정보',
+    lbl_restaurantName: '레스토랑 이름',
+    placeholder_restaurant: '이름 입력',
+    lbl_grp_display: '디스플레이',
+    lbl_langToggle: '영어 모드',
+    lbl_langSub: 'UI를 영어로 표시합니다',
+    lbl_themeToggle: '라이트 모드',
+    lbl_themeSub: '밝은 테마로 전환합니다',
+    lbl_grp_schedule: '요일별 특별 항목',
+    lbl_scheduleBtn: '요일별 특별 항목 관리',
+    lbl_grp_appinfo: '앱 정보',
+    lbl_version: '버전',
+    lbl_build: '빌드',
+    lbl_reset: '데이터 초기화',
+    lbl_resetSub: '모든 기록과 설정이 삭제됩니다',
+    btn_resetAll: '전체 초기화',
+    modal_title: '요일별 특별 항목',
+    placeholder_dayItem: '항목 입력...',
+    btn_dayAdd: '추가',
+    btn_modalSave: '저장',
+    toast_noName: '담당자 이름을 입력해주세요',
+    toast_saved: '✓ 기록이 저장되었습니다',
+    toast_scheduleSaved: '요일별 항목이 저장되었습니다',
+    toast_reset: '초기화 완료',
+    confirm_reset: '모든 데이터를 초기화하시겠습니까?',
+    progress_done: (d,t,p) => `${d} / ${t} 완료 (${p}%)`,
+    scheduled_label: (day) => `${day}요일 특별 항목`,
+    day_empty: '등록된 항목이 없습니다',
+    schedule_none: '등록된 특별 항목 없음',
+    schedule_count: (day, n) => `${day}: ${n}개`,
+    default_restaurant: 'DAILY RESTAURANT',
+    days: ['월','화','수','목','금','토','일'],
+    days_full: ['월요일','화요일','수요일','목요일','금요일','토요일','일요일'],
+  },
+  en: {
+    headerTitle: 'Closing Checklist',
+    tab_record: 'Record',
+    tab_history: 'History',
+    tab_settings: 'Settings',
+    lbl_worker: 'Staff',
+    placeholder_worker: 'Enter your name',
+    placeholder_addItem: 'Add item...',
+    btn_add: 'Add',
+    btn_save: '✓ Save Today\'s Closing Record',
+    lbl_todayChecklist: "Today's Checklist",
+    lbl_noHistory: 'No records saved yet.',
+    lbl_grp_restaurant: 'Restaurant Info',
+    lbl_restaurantName: 'Restaurant Name',
+    placeholder_restaurant: 'Enter name',
+    lbl_grp_display: 'Display',
+    lbl_langToggle: 'English Mode',
+    lbl_langSub: 'Display UI in English',
+    lbl_themeToggle: 'Light Mode',
+    lbl_themeSub: 'Switch to light theme',
+    lbl_grp_schedule: 'Day-Specific Tasks',
+    lbl_scheduleBtn: 'Manage Day-Specific Tasks',
+    lbl_grp_appinfo: 'App Info',
+    lbl_version: 'Version',
+    lbl_build: 'Build',
+    lbl_reset: 'Reset Data',
+    lbl_resetSub: 'All records and settings will be deleted',
+    btn_resetAll: 'Reset All',
+    modal_title: 'Day-Specific Tasks',
+    placeholder_dayItem: 'Enter task...',
+    btn_dayAdd: 'Add',
+    btn_modalSave: 'Save',
+    toast_noName: 'Please enter staff name',
+    toast_saved: '✓ Record saved',
+    toast_scheduleSaved: 'Day-specific tasks saved',
+    toast_reset: 'Reset complete',
+    confirm_reset: 'Reset all data?',
+    progress_done: (d,t,p) => `${d} / ${t} done (${p}%)`,
+    scheduled_label: (day) => `${day} Special Tasks`,
+    day_empty: 'No tasks added yet',
+    schedule_none: 'No day-specific tasks',
+    schedule_count: (day, n) => `${day}: ${n}`,
+    default_restaurant: 'DAILY RESTAURANT',
+    days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+    days_full: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+  }
+};
+
+let lang = 'ko';
+function t(key, ...args) {
+  const val = T[lang][key];
+  if (typeof val === 'function') return val(...args);
+  return val || key;
+}
+
+/* ===== STATE ===== */
+const DAYS_KO = ['월','화','수','목','금','토','일'];
+const DAY_KEYS = ['mon','tue','wed','thu','fri','sat','sun'];
+
+let state = {
+  restaurantName: '',
+  checklist: [],
+  workerName: '',
+  schedule: { mon:[], tue:[], wed:[], thu:[], fri:[], sat:[], sun:[] },
+  langEN: false,
+  lightMode: false
+};
+let history = [];
+let currentDay = 0;
+
+/* ===== DATE UTILS ===== */
+function getBusinessDate() {
+  const now = new Date();
+  if (now.getHours() < 4) now.setDate(now.getDate() - 1);
+  return now;
+}
+function formatDate(d) {
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+function getDayOfWeek(d) { return (d.getDay() + 6) % 7; }
+function getTodayKey() { return formatDate(getBusinessDate()); }
+
+/* ===== STORAGE ===== */
+function load() {
+  const s = localStorage.getItem('dcc_state');
+  const h = localStorage.getItem('dcc_history');
+  const lastDate = localStorage.getItem('dcc_lastDate');
+  if (s) state = {...state, ...JSON.parse(s)};
+  if (h) history = JSON.parse(h);
+  const todayKey = getTodayKey();
+  if (lastDate && lastDate !== todayKey) {
+    const oldState = JSON.parse(s || '{}');
+    if (oldState.checklist && oldState.checklist.length > 0) {
+      history.unshift({
+        date: lastDate,
+        worker: oldState.workerName || '—',
+        items: JSON.parse(JSON.stringify(oldState.checklist)),
+        restaurantName: oldState.restaurantName || ''
+      });
+    }
+    state.checklist = state.checklist.map(i => ({...i, checked: false}));
+    state.workerName = '';
+    localStorage.setItem('dcc_lastDate', todayKey);
+  } else if (!lastDate) {
+    localStorage.setItem('dcc_lastDate', todayKey);
+  }
+  // 7일 초과 히스토리 삭제
+  const cutoff = new Date(getBusinessDate());
+  cutoff.setDate(cutoff.getDate() - 7);
+  const cutoffStr = formatDate(cutoff);
+  history = history.filter(r => r.date >= cutoffStr);
+  localStorage.setItem('dcc_history', JSON.stringify(history));
+  save();
+}
+function save() { localStorage.setItem('dcc_state', JSON.stringify(state)); }
+
+/* ===== LANG & THEME ===== */
+function applyLang() {
+  state.langEN = document.getElementById('toggleLang').checked;
+  lang = state.langEN ? 'en' : 'ko';
+  save();
+  applyI18n();
+  renderChecklist();
+  renderHistory();
+  updateSchedulePreview();
+}
+
+function applyTheme() {
+  state.lightMode = document.getElementById('toggleTheme').checked;
+  save();
+  document.body.classList.toggle('light-mode', state.lightMode);
+  const thSt = document.getElementById('themeStatus');
+  thSt.textContent = state.lightMode ? 'ON' : 'OFF';
+  thSt.className = 'toggle-status' + (state.lightMode ? ' on' : '');
+}
+
+function applyI18n() {
+  const d = getBusinessDate();
+  const dow = getDayOfWeek(d);
+  const dayName = T[lang].days[dow];
+
+  document.getElementById('headerTitle').textContent = t('headerTitle');
+  document.getElementById('tabBtn-record').textContent = t('tab_record');
+  document.getElementById('tabBtn-history').textContent = t('tab_history');
+  document.getElementById('tabBtn-settings').textContent = t('tab_settings');
+  document.getElementById('lbl-worker').textContent = t('lbl_worker');
+  document.getElementById('workerName').placeholder = t('placeholder_worker');
+  document.getElementById('newItemInput').placeholder = t('placeholder_addItem');
+  document.getElementById('btn-add').textContent = t('btn_add');
+  document.getElementById('btn-save').textContent = t('btn_save');
+  document.getElementById('lbl-todayChecklist').textContent = t('lbl_todayChecklist');
+  document.getElementById('lbl-grp-restaurant').textContent = t('lbl_grp_restaurant');
+  document.getElementById('lbl-restaurantName').textContent = t('lbl_restaurantName');
+  document.getElementById('restaurantNameInput').placeholder = t('placeholder_restaurant');
+  document.getElementById('lbl-grp-display').textContent = t('lbl_grp_display');
+  document.getElementById('lbl-langToggle').textContent = t('lbl_langToggle');
+  document.getElementById('lbl-langSub').textContent = t('lbl_langSub');
+  document.getElementById('lbl-themeToggle').textContent = t('lbl_themeToggle');
+  document.getElementById('lbl-themeSub').textContent = t('lbl_themeSub');
+  document.getElementById('lbl-grp-schedule').textContent = t('lbl_grp_schedule');
+  document.getElementById('lbl-scheduleBtn').textContent = t('lbl_scheduleBtn');
+  document.getElementById('lbl-grp-appinfo').textContent = t('lbl_grp_appinfo');
+  document.getElementById('lbl-version').textContent = t('lbl_version');
+  document.getElementById('lbl-build').textContent = t('lbl_build');
+  document.getElementById('lbl-reset').textContent = t('lbl_reset');
+  document.getElementById('lbl-resetSub').textContent = t('lbl_resetSub');
+  document.getElementById('btn-resetAll').textContent = t('btn_resetAll');
+  document.getElementById('modal-title').textContent = t('modal_title');
+  document.getElementById('dayItemInput').placeholder = t('placeholder_dayItem');
+  document.getElementById('btn-dayAdd').textContent = t('btn_dayAdd');
+  document.getElementById('btn-modalSave').textContent = t('btn_modalSave');
+
+  // Header date with localized day
+  document.getElementById('headerDate').textContent = formatDate(d) + ' (' + dayName + ')';
+
+  // Lang toggle status
+  const langSt = document.getElementById('langStatus');
+  langSt.textContent = state.langEN ? 'ON' : 'OFF';
+  langSt.className = 'toggle-status' + (state.langEN ? ' on' : '');
+
+  // Header restaurant name
+  document.getElementById('headerRestaurantName').textContent = state.restaurantName || t('default_restaurant');
+
+  // Scheduled section label refresh
+  const schLabel = document.getElementById('scheduledLabel');
+  if (schLabel) schLabel.textContent = t('scheduled_label', dayName);
+}
+
+/* ===== RENDER ===== */
+function render() {
+  lang = state.langEN ? 'en' : 'ko';
+
+  // Toggle states
+  document.getElementById('toggleLang').checked = !!state.langEN;
+  document.getElementById('toggleTheme').checked = !!state.lightMode;
+  document.body.classList.toggle('light-mode', !!state.lightMode);
+
+  const langSt = document.getElementById('langStatus');
+  langSt.textContent = state.langEN ? 'ON' : 'OFF';
+  langSt.className = 'toggle-status' + (state.langEN ? ' on' : '');
+  const thSt = document.getElementById('themeStatus');
+  thSt.textContent = state.lightMode ? 'ON' : 'OFF';
+  thSt.className = 'toggle-status' + (state.lightMode ? ' on' : '');
+
+  document.getElementById('workerName').value = state.workerName || '';
+  document.getElementById('restaurantNameInput').value = state.restaurantName || '';
+
+  applyI18n();
+  renderChecklist();
+  updateProgress();
+  renderHistory();
+  updateSchedulePreview();
+}
+
+function renderChecklist() {
+  const container = document.getElementById('checklistContainer');
+  container.innerHTML = '';
+  state.checklist.filter(i => !i.isScheduled).forEach((item, idx) => {
+    const realIdx = state.checklist.indexOf(item);
+    const div = document.createElement('div');
+    div.className = 'check-item' + (item.checked ? ' completed' : '');
+    div.innerHTML = `
+      <div class="check-box ${item.checked ? 'checked' : ''}" onclick="toggleCheck(${realIdx})">
+        <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+          <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="check-text" onclick="toggleCheck(${realIdx})">${escHtml(item.text)}</div>
+      <button class="check-del-btn" onclick="deleteItem(${realIdx})">✕</button>
+    `;
+    container.appendChild(div);
+  });
+
+  // Scheduled items for today
+  const todayDow = getDayOfWeek(getBusinessDate());
+  const dayKey = DAY_KEYS[todayDow];
+  const scheduled = state.schedule[dayKey] || [];
+  const schCont = document.getElementById('scheduledContainer');
+  const secEl = document.getElementById('scheduledSection');
+  const schLabel = document.getElementById('scheduledLabel');
+  schCont.innerHTML = '';
+
+  if (scheduled.length > 0) {
+    secEl.style.display = 'block';
+    const dayName = T[lang].days[todayDow];
+    schLabel.textContent = t('scheduled_label', dayName);
+    scheduled.forEach((text, idx) => {
+      const key = 'sched_' + dayKey + '_' + idx;
+      const existing = state.checklist.find(i => i.id === key);
+      const checked = existing ? existing.checked : false;
+      const div = document.createElement('div');
+      div.className = 'check-item scheduled-item' + (checked ? ' completed' : '');
+      div.innerHTML = `
+        <div class="check-box ${checked ? 'checked' : ''}" onclick="toggleScheduledCheck('${key}','${escJs(text)}',${idx})">
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+            <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="check-text" style="${checked?'text-decoration:line-through;color:var(--text3)':''}" onclick="toggleScheduledCheck('${key}','${escJs(text)}',${idx})">${escHtml(text)}</div>
+      `;
+      schCont.appendChild(div);
+    });
+  } else {
+    secEl.style.display = 'none';
+  }
+}
+
+function toggleCheck(idx) {
+  state.checklist[idx].checked = !state.checklist[idx].checked;
+  save(); renderChecklist(); updateProgress();
+}
+function toggleScheduledCheck(key, text, idx) {
+  const existing = state.checklist.find(i => i.id === key);
+  if (existing) existing.checked = !existing.checked;
+  else state.checklist.push({ id: key, text, checked: true, isScheduled: true });
+  save(); renderChecklist(); updateProgress();
+}
+function deleteItem(idx) {
+  state.checklist.splice(idx, 1);
+  save(); renderChecklist(); updateProgress();
+}
+function addItem() {
+  const input = document.getElementById('newItemInput');
+  const text = input.value.trim();
+  if (!text) return;
+  state.checklist.push({ id: 'item_' + Date.now(), text, checked: false });
+  input.value = '';
+  save(); renderChecklist(); updateProgress();
+}
+document.getElementById('newItemInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
+
+function updateProgress() {
+  const todayDow = getDayOfWeek(getBusinessDate());
+  const dayKey = DAY_KEYS[todayDow];
+  const scheduledCount = (state.schedule[dayKey] || []).length;
+  const regularItems = state.checklist.filter(i => !i.isScheduled);
+  const scheduledItems = state.checklist.filter(i => i.isScheduled && i.id.startsWith('sched_' + dayKey));
+  const total = regularItems.length + scheduledCount;
+  const done = regularItems.filter(i => i.checked).length + scheduledItems.filter(i => i.checked).length;
+  const pct = total > 0 ? Math.round(done / total * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = t('progress_done', done, total, pct);
+}
+
+function saveRecord() {
+  const name = document.getElementById('workerName').value.trim();
+  if (!name) { showToast(t('toast_noName')); return; }
+  state.workerName = name;
+  const todayKey = getTodayKey();
+  const todayDow = getDayOfWeek(getBusinessDate());
+  const dayKey = DAY_KEYS[todayDow];
+  const scheduled = state.schedule[dayKey] || [];
+  const allItems = [
+    ...state.checklist.filter(i => !i.isScheduled).map(i => ({ text: i.text, checked: i.checked })),
+    ...scheduled.map((text, idx) => {
+      const key = 'sched_' + dayKey + '_' + idx;
+      const found = state.checklist.find(i => i.id === key);
+      return { text: text + ' ★', checked: found ? found.checked : false };
+    })
+  ];
+  const existing = history.findIndex(h => h.date === todayKey);
+  const record = { date: todayKey, worker: name, items: allItems, restaurantName: state.restaurantName || '' };
+  if (existing >= 0) history[existing] = record;
+  else history.unshift(record);
+  localStorage.setItem('dcc_history', JSON.stringify(history));
+  save();
+  renderHistory();
+  showToast(t('toast_saved'));
+}
+
+function renderHistory() {
+  const container = document.getElementById('historyContainer');
+  if (!history.length) {
+    container.innerHTML = `<div class="history-empty">${t('lbl_noHistory')}</div>`;
+    return;
+  }
+  container.innerHTML = '';
+  history.forEach((rec, ri) => {
+    const total = rec.items.length;
+    const done = rec.items.filter(i => i.checked).length;
+    const pct = total > 0 ? Math.round(done / total * 100) : 0;
+    const isComplete = pct === 100;
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    card.innerHTML = `
+      <div class="history-card-header" id="hh_${ri}" onclick="toggleHistory(${ri})">
+        <div>
+          <div class="history-card-date">${rec.date}</div>
+          <div class="history-worker" style="margin-top:3px;">${rec.worker}</div>
+        </div>
+        <div class="history-card-meta">
+          <span class="history-badge ${isComplete ? 'badge-green' : 'badge-amber'}">${done}/${total} (${pct}%)</span>
+          <span class="history-chevron" id="hc_${ri}">▼</span>
+        </div>
+      </div>
+      <div class="history-card-body" id="hb_${ri}">
+        ${rec.items.map(item => `
+          <div class="history-item-row">
+            <div class="history-dot ${item.checked ? 'dot-done' : 'dot-undone'}"></div>
+            <span style="color:${item.checked ? 'var(--text2)' : 'var(--text3)'};${item.checked ? '' : 'text-decoration:line-through'}">${escHtml(item.text)}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleHistory(ri) {
+  const body = document.getElementById('hb_' + ri);
+  const header = document.getElementById('hh_' + ri);
+  const chevron = document.getElementById('hc_' + ri);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+// SETTINGS
+document.getElementById('restaurantNameInput').addEventListener('input', function() {
+  state.restaurantName = this.value;
+  save();
+  document.getElementById('headerRestaurantName').textContent = this.value || t('default_restaurant');
+});
+document.getElementById('workerName').addEventListener('input', function() {
+  state.workerName = this.value; save();
+});
+
+// SCHEDULE MODAL
+let modalSchedule = {};
+
+function openScheduleModal() {
+  modalSchedule = JSON.parse(JSON.stringify(state.schedule));
+  currentDay = 0;
+  renderDayTabs();
+  renderDayItems();
+  document.getElementById('scheduleModal').classList.add('open');
+}
+function closeScheduleModal() {
+  document.getElementById('scheduleModal').classList.remove('open');
+}
+function renderDayTabs() {
+  const container = document.getElementById('dayTabs');
+  container.innerHTML = '';
+  T[lang].days.forEach((day, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'day-tab' + (i === currentDay ? ' active' : '');
+    btn.textContent = day;
+    btn.onclick = () => { currentDay = i; renderDayTabs(); renderDayItems(); };
+    container.appendChild(btn);
+  });
+}
+function renderDayItems() {
+  const key = DAY_KEYS[currentDay];
+  const items = modalSchedule[key] || [];
+  const container = document.getElementById('dayItemsList');
+  container.innerHTML = '';
+  if (items.length === 0) {
+    container.innerHTML = `<div class="day-empty">${t('day_empty')}</div>`;
+    return;
+  }
+  items.forEach((text, idx) => {
+    const row = document.createElement('div');
+    row.className = 'day-item-row';
+    row.innerHTML = `
+      <span class="day-item-text">${escHtml(text)}</span>
+      <button class="day-item-del" onclick="deleteDayItem(${idx})">✕</button>
+    `;
+    container.appendChild(row);
+  });
+}
+function addDayItem() {
+  const input = document.getElementById('dayItemInput');
+  const text = input.value.trim();
+  if (!text) return;
+  const key = DAY_KEYS[currentDay];
+  if (!modalSchedule[key]) modalSchedule[key] = [];
+  modalSchedule[key].push(text);
+  input.value = '';
+  renderDayItems();
+}
+document.getElementById('dayItemInput').addEventListener('keydown', e => { if (e.key === 'Enter') addDayItem(); });
+function deleteDayItem(idx) {
+  modalSchedule[DAY_KEYS[currentDay]].splice(idx, 1);
+  renderDayItems();
+}
+function saveSchedule() {
+  state.schedule = JSON.parse(JSON.stringify(modalSchedule));
+  save();
+  updateSchedulePreview();
+  renderChecklist();
+  updateProgress();
+  closeScheduleModal();
+  showToast(t('toast_scheduleSaved'));
+}
+function updateSchedulePreview() {
+  const preview = document.getElementById('schedulePreview');
+  const parts = [];
+  T[lang].days.forEach((day, i) => {
+    const key = DAY_KEYS[i];
+    const count = (state.schedule[key] || []).length;
+    if (count > 0) parts.push(t('schedule_count', day, count));
+  });
+  preview.textContent = parts.length > 0 ? parts.join('  ·  ') : t('schedule_none');
+}
+
+function resetAll() {
+  if (!confirm(t('confirm_reset'))) return;
+  localStorage.clear();
+  state = {
+    restaurantName: '',
+    checklist: [],
+    workerName: '',
+    schedule: { mon:[], tue:[], wed:[], thu:[], fri:[], sat:[], sun:[] },
+    langEN: false,
+    lightMode: false
+  };
+  history = [];
+  render();
+  showToast(t('toast_reset'));
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('tabBtn-' + tab).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escJs(str) {
+  return String(str).replace(/'/g,"\\'").replace(/\\/g,'\\\\');
+}
+
+document.getElementById('scheduleModal').addEventListener('click', function(e) {
+  if (e.target === this) closeScheduleModal();
+});
+
+// INIT
+load();
+render();
+
+// 날짜 변경 자동 감지 — 1분마다 + 화면 복귀 시 즉시 체크 (아이패드 대응)
+let _lastCheckedDate = getTodayKey();
+function checkDateChange() {
+  const now = getTodayKey();
+  if (now !== _lastCheckedDate) {
+    _lastCheckedDate = now;
+    load();
+    render();
+  }
+}
+setInterval(checkDateChange, 60 * 1000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') checkDateChange();
+});
+</script>
+</body>
+</html>
