@@ -57,6 +57,7 @@
     display: flex;
     flex-direction: column;
     transition: background 0.25s, color 0.25s;
+    font-size: 15px; /* base — nothing goes below 13px */
   }
 
   /* HEADER */
@@ -76,22 +77,42 @@
     margin-bottom: 6px;
   }
   .restaurant-name {
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 13px; /* was 11px → bumped to min */
+    font-weight: 600;
     color: var(--accent);
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
   }
   .header-date {
     font-family: 'DM Mono', monospace;
-    font-size: 14px;
+    font-size: 13px; /* was 12px → bumped */
     color: var(--text2);
   }
   .header-title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: -0.5px;
   }
+
+  /* SYNC STATUS */
+  .sync-status {
+    font-size: 13px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+  }
+  .sync-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--text3);
+    transition: background 0.3s;
+  }
+  .sync-dot.synced { background: var(--green); }
+  .sync-dot.syncing { background: var(--accent); animation: pulse 1s infinite; }
+  .sync-dot.error { background: var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
   /* TABS */
   .tab-bar {
@@ -108,16 +129,13 @@
     border: none;
     color: var(--text3);
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: all 0.2s;
   }
-  .tab-btn.active {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
-  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
 
   /* CONTENT */
   .tab-content { display: none; flex: 1; overflow-y: auto; }
@@ -138,7 +156,7 @@
     transition: background 0.25s;
   }
   .name-label {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text2);
     white-space: nowrap;
   }
@@ -148,7 +166,7 @@
     border: none;
     color: var(--text);
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 500;
     outline: none;
   }
@@ -169,7 +187,7 @@
     transition: width 0.4s ease;
   }
   .progress-label {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text2);
     text-align: right;
     margin-bottom: 16px;
@@ -178,8 +196,8 @@
   /* CHECKLIST */
   .checklist-section-label {
     font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--text3);
     margin-bottom: 8px;
@@ -198,55 +216,36 @@
     transition: background 0.15s, border-color 0.15s;
     user-select: none;
   }
-  .check-item.completed {
-    background: var(--bg3);
-    border-color: var(--border);
-  }
-  .check-item.completed .check-text {
-    color: var(--text3);
-    text-decoration: line-through;
-  }
+  .check-item.completed { background: var(--bg3); }
+  .check-item.completed .check-text { color: var(--text3); text-decoration: line-through; }
 
   .check-box {
-    width: 22px;
-    height: 22px;
+    width: 22px; height: 22px;
     border-radius: 6px;
     border: 1.5px solid var(--border2);
     background: var(--bg3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0;
     transition: all 0.15s;
   }
-  .check-box.checked {
-    background: var(--green);
-    border-color: var(--green);
-  }
+  .check-box.checked { background: var(--green); border-color: var(--green); }
   .check-box svg { display: none; }
   .check-box.checked svg { display: block; }
 
   .check-text {
     flex: 1;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.4;
     cursor: pointer;
     color: var(--text);
     transition: color 0.15s;
   }
-
   .check-del-btn {
-    background: none;
-    border: none;
-    color: var(--text3);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 4px;
-    font-size: 18px;
-    line-height: 1;
-    transition: color 0.15s;
-    flex-shrink: 0;
+    background: none; border: none;
+    color: var(--text3); cursor: pointer;
+    padding: 4px; border-radius: 4px;
+    font-size: 16px; line-height: 1;
+    transition: color 0.15s; flex-shrink: 0;
   }
   .check-del-btn:hover { color: var(--red); }
 
@@ -254,39 +253,71 @@
   .scheduled-section { margin-top: 20px; }
   .scheduled-section-label {
     font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
     text-transform: uppercase;
     color: var(--accent2);
     margin-bottom: 8px;
     padding: 0 4px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex; align-items: center; gap: 6px;
   }
   .scheduled-section-label::before {
     content: '';
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: var(--accent);
   }
   .check-item.scheduled-item {
-    border-color: rgba(184, 134, 42, 0.25);
-    background: rgba(184, 134, 42, 0.06);
+    border-color: rgba(184,134,42,0.25);
+    background: rgba(184,134,42,0.06);
   }
   body:not(.light-mode) .check-item.scheduled-item {
-    border-color: rgba(232, 197, 109, 0.2);
-    background: rgba(232, 197, 109, 0.05);
+    border-color: rgba(232,197,109,0.2);
+    background: rgba(232,197,109,0.05);
   }
 
-  /* ADD ITEM */
-  .add-item-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
+  /* MEMO SECTION */
+  .memo-section {
+    margin-top: 20px;
   }
+  .memo-section-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+    padding: 0 4px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .memo-section-label::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .memo-textarea {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    color: var(--text);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    outline: none;
+    resize: none;
+    min-height: 90px;
+    transition: border-color 0.15s, background 0.25s;
+  }
+  .memo-textarea:focus { border-color: var(--blue); }
+  .memo-textarea::placeholder { color: var(--text3); }
+
+  /* ADD ITEM */
+  .add-item-row { display: flex; gap: 8px; margin-top: 12px; }
   .add-item-input {
     flex: 1;
     background: var(--bg2);
@@ -295,368 +326,236 @@
     padding: 10px 14px;
     color: var(--text);
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     outline: none;
     transition: border-color 0.15s, background 0.25s;
   }
   .add-item-input:focus { border-color: var(--border2); }
   .add-item-input::placeholder { color: var(--text3); }
   .add-btn {
-    background: var(--accent);
-    border: none;
-    color: #fff;
+    background: var(--accent); border: none;
+    color: #000;
     border-radius: var(--radius-sm);
     padding: 10px 18px;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s;
-    white-space: nowrap;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s; white-space: nowrap;
   }
-  body:not(.light-mode) .add-btn { color: #000; }
+  body.light-mode .add-btn { color: #fff; }
   .add-btn:hover { background: var(--accent2); }
 
   /* SAVE BUTTON */
   .save-btn-wrap { padding: 16px 20px; }
   .save-btn {
-    width: 100%;
-    padding: 15px;
-    background: var(--green);
-    border: none;
-    border-radius: var(--radius);
-    color: #fff;
+    width: 100%; padding: 15px;
+    background: var(--green); border: none;
+    border-radius: var(--radius); color: #fff;
     font-family: 'Noto Sans KR', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.5px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.5px;
     transition: background 0.15s;
   }
   .save-btn:hover { background: var(--green2); }
 
   /* HISTORY TAB */
   .history-empty {
-    text-align: center;
-    color: var(--text3);
-    padding: 60px 20px;
-    font-size: 16px;
+    text-align: center; color: var(--text3);
+    padding: 60px 20px; font-size: 14px;
   }
   .history-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin: 12px 20px;
-    overflow: hidden;
-    transition: background 0.25s;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); margin: 12px 20px;
+    overflow: hidden; transition: background 0.25s;
   }
   .history-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px; cursor: pointer;
+    border-bottom: 1px solid transparent; transition: border-color 0.2s;
   }
   .history-card-header.open { border-bottom-color: var(--border); }
   .history-card-date {
     font-family: 'DM Mono', monospace;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
+    font-size: 13px; font-weight: 500; color: var(--text);
   }
   .history-card-meta { display: flex; align-items: center; gap: 12px; }
   .history-badge {
-    font-size: 13px;
-    padding: 3px 8px;
-    border-radius: 100px;
-    font-weight: 500;
+    font-size: 13px; padding: 3px 8px;
+    border-radius: 100px; font-weight: 500;
   }
   .badge-green { background: rgba(46,138,80,0.15); color: var(--green); }
   .badge-amber { background: rgba(184,134,42,0.15); color: var(--accent); }
-  .history-worker { font-size: 14px; color: var(--text2); }
-  .history-chevron { color: var(--text3); font-size: 14px; transition: transform 0.2s; }
+  .history-worker { font-size: 13px; color: var(--text2); }
+  .history-chevron { color: var(--text3); font-size: 13px; transition: transform 0.2s; }
   .history-chevron.open { transform: rotate(180deg); }
   .history-card-body { display: none; padding: 12px 16px; }
   .history-card-body.open { display: block; }
   .history-item-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 15px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 13px;
   }
   .history-item-row:last-child { border-bottom: none; }
   .history-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-done { background: var(--green); }
   .dot-undone { background: var(--border2); }
+  .history-memo {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: var(--bg3);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    border-left: 3px solid var(--blue);
+  }
+  .history-memo-label {
+    font-size: 13px; color: var(--blue);
+    font-weight: 600; margin-bottom: 6px;
+  }
 
   /* SETTINGS TAB */
   .settings-section { padding: 16px 20px; }
   .settings-group {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 20px;
-    transition: background 0.25s;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    margin-bottom: 20px; transition: background 0.25s;
   }
   .settings-group-title {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text3);
-    padding: 12px 16px 8px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--text3); padding: 12px 16px 8px;
     border-bottom: 1px solid var(--border);
   }
   .settings-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 16px;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; border-bottom: 1px solid var(--border);
   }
   .settings-row:last-child { border-bottom: none; }
-  .settings-label { font-size: 16px; color: var(--text); }
-  .settings-sublabel { font-size: 14px; color: var(--text2); margin-top: 2px; }
+  .settings-label { font-size: 14px; color: var(--text); }
+  .settings-sublabel { font-size: 13px; color: var(--text2); margin-top: 2px; }
   .settings-input {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
-    outline: none;
-    width: 180px;
-    text-align: right;
-    transition: background 0.25s;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 12px;
+    color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px; outline: none; width: 180px;
+    text-align: right; transition: background 0.25s;
   }
   .settings-input::placeholder { color: var(--text3); }
 
-  /* TOGGLE SWITCH */
-  .toggle-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .toggle-switch {
-    position: relative;
-    width: 46px;
-    height: 26px;
-    flex-shrink: 0;
-  }
+  /* TOGGLE */
+  .toggle-wrap { display: flex; align-items: center; gap: 10px; }
+  .toggle-switch { position: relative; width: 46px; height: 26px; flex-shrink: 0; }
   .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
   .toggle-slider {
-    position: absolute;
-    inset: 0;
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    border-radius: 100px;
-    cursor: pointer;
+    position: absolute; inset: 0;
+    background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: 100px; cursor: pointer;
     transition: background 0.2s, border-color 0.2s;
   }
   .toggle-slider::before {
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    left: 3px;
-    top: 3px;
-    background: var(--text3);
-    border-radius: 50%;
+    content: ''; position: absolute;
+    width: 18px; height: 18px;
+    left: 3px; top: 3px;
+    background: var(--text3); border-radius: 50%;
     transition: transform 0.2s, background 0.2s;
   }
-  .toggle-switch input:checked + .toggle-slider {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-  .toggle-switch input:checked + .toggle-slider::before {
-    transform: translateX(20px);
-    background: #fff;
-  }
-  body.light-mode .toggle-switch input:checked + .toggle-slider::before { background: #fff; }
+  .toggle-switch input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
+  .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); background: #fff; }
   .toggle-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--text3);
-    min-width: 20px;
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    color: var(--text3); min-width: 20px;
   }
   .toggle-status.on { color: var(--accent); }
 
   .schedule-card-btn {
-    width: 100%;
-    background: var(--bg3);
-    border: 1px dashed var(--border2);
-    border-radius: var(--radius);
-    padding: 20px;
-    color: var(--text2);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    width: 100%; background: var(--bg3);
+    border: 1px dashed var(--border2); border-radius: var(--radius);
+    padding: 20px; color: var(--text2);
+    font-family: 'Noto Sans KR', sans-serif; font-size: 14px;
+    cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; margin-bottom: 12px;
   }
-  .schedule-card-btn:hover {
-    background: var(--bg4);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .schedule-card-btn:hover { background: var(--bg4); border-color: var(--accent); color: var(--accent); }
 
   /* MODAL */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 1000;
-    align-items: flex-end;
-    justify-content: center;
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 1000;
+    align-items: flex-end; justify-content: center;
   }
   body.light-mode .modal-overlay { background: rgba(0,0,0,0.4); }
   .modal-overlay.open { display: flex; }
   .modal {
-    background: var(--bg2);
-    border: 1px solid var(--border);
+    background: var(--bg2); border: 1px solid var(--border);
     border-radius: var(--radius) var(--radius) 0 0;
-    width: 100%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    padding: 20px;
-    animation: slideUp 0.25s ease;
-    transition: background 0.25s;
+    width: 100%; max-width: 500px; max-height: 90vh;
+    overflow-y: auto; padding: 20px;
+    animation: slideUp 0.25s ease; transition: background 0.25s;
   }
   @keyframes slideUp {
     from { transform: translateY(100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
   }
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .modal-title { font-size: 18px; font-weight: 700; }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .modal-title { font-size: 16px; font-weight: 700; }
   .modal-close {
-    background: var(--bg3);
-    border: none;
-    color: var(--text2);
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    background: var(--bg3); border: none; color: var(--text2);
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+    font-size: 18px; display: flex; align-items: center; justify-content: center;
   }
 
   .day-tabs { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
   .day-tab {
-    flex: 1;
-    min-width: 36px;
-    padding: 7px 4px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text2);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: center;
-    transition: all 0.15s;
+    flex: 1; min-width: 36px; padding: 7px 4px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text2);
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13px;
+    font-weight: 500; cursor: pointer; text-align: center; transition: all 0.15s;
   }
-  .day-tab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-  body:not(.light-mode) .day-tab.active { color: #000; }
+  .day-tab.active { background: var(--accent); border-color: var(--accent); color: #000; }
+  body.light-mode .day-tab.active { color: #fff; }
 
   .day-items-list { margin-bottom: 12px; }
   .day-item-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
   }
-  .day-item-text { flex: 1; font-size: 18px; }
-  .day-item-del {
-    background: none;
-    border: none;
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 18px;
-    padding: 4px;
-    transition: color 0.15s;
-  }
+  .day-item-text { flex: 1; font-size: 14px; }
+  .day-item-del { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; padding: 4px; transition: color 0.15s; }
   .day-item-del:hover { color: var(--red); }
-  .day-empty { color: var(--text3); font-size: 15px; padding: 16px 0; text-align: center; }
+  .day-empty { color: var(--text3); font-size: 13px; padding: 16px 0; text-align: center; }
 
   .modal-add-row { display: flex; gap: 8px; margin-top: 8px; }
   .modal-add-input {
-    flex: 1;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px 12px;
-    color: var(--text);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
-    outline: none;
-    transition: background 0.25s;
+    flex: 1; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 10px 12px;
+    color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px; outline: none; transition: background 0.25s;
   }
   .modal-add-input::placeholder { color: var(--text3); }
   .modal-add-btn {
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
+    background: var(--accent); border: none; color: #000;
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer;
   }
-  body:not(.light-mode) .modal-add-btn { color: #000; }
-
+  body.light-mode .modal-add-btn { color: #fff; }
   .modal-save-btn {
-    width: 100%;
-    margin-top: 20px;
-    padding: 13px;
-    background: var(--green);
-    border: none;
-    border-radius: var(--radius);
-    color: #fff;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    cursor: pointer;
+    width: 100%; margin-top: 20px; padding: 13px;
+    background: var(--green); border: none; border-radius: var(--radius);
+    color: #fff; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 14px; font-weight: 700; cursor: pointer;
   }
 
   /* Toast */
   .toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
+    position: fixed; bottom: 20px; left: 50%;
     transform: translateX(-50%) translateY(80px);
-    background: var(--bg4);
-    border: 1px solid var(--border2);
-    border-radius: var(--radius);
-    padding: 12px 20px;
-    font-size: 17
-
-px;
-    color: var(--text);
-    z-index: 2000;
-    transition: transform 0.3s ease;
-    white-space: nowrap;
+    background: var(--bg4); border: 1px solid var(--border2);
+    border-radius: var(--radius); padding: 12px 20px;
+    font-size: 13px; color: var(--text);
+    z-index: 2000; transition: transform 0.3s ease; white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
 
@@ -673,6 +572,10 @@ px;
     <div class="header-date" id="headerDate"></div>
   </div>
   <div class="header-title" id="headerTitle">마감 체크리스트</div>
+  <div class="sync-status">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncLabel">연결 중...</span>
+  </div>
 </div>
 
 <div class="tab-bar">
@@ -701,6 +604,11 @@ px;
     <div class="scheduled-section" id="scheduledSection" style="display:none">
       <div class="scheduled-section-label" id="scheduledLabel"></div>
       <div id="scheduledContainer"></div>
+    </div>
+    <!-- MEMO -->
+    <div class="memo-section">
+      <div class="memo-section-label" id="lbl-memo">메모</div>
+      <textarea class="memo-textarea" id="memoInput" placeholder="오늘 특이사항, 메모 등을 자유롭게 입력하세요..."></textarea>
     </div>
   </div>
   <div class="save-btn-wrap">
@@ -759,11 +667,11 @@ px;
 
     <div class="settings-group">
       <div class="settings-group-title" id="lbl-grp-schedule">요일별 특별 항목</div>
-      <div class="settings-row" style="flex-direction:column; align-items:stretch; gap:0; padding:16px;">
-        <button class="schedule-card-btn" id="btn-scheduleOpen" onclick="openScheduleModal()">
+      <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:0;padding:16px;">
+        <button class="schedule-card-btn" onclick="openScheduleModal()">
           <span>📅</span> <span id="lbl-scheduleBtn">요일별 특별 항목 관리</span>
         </button>
-        <div id="schedulePreview" style="color:var(--text3);font-size:14px;text-align:center;"></div>
+        <div id="schedulePreview" style="color:var(--text3);font-size:13px;text-align:center;"></div>
       </div>
     </div>
 
@@ -771,16 +679,16 @@ px;
       <div class="settings-group-title" id="lbl-grp-appinfo">앱 정보</div>
       <div class="settings-row">
         <div class="settings-label" id="lbl-version">버전</div>
-        <div style="font-family:'DM Mono',monospace;font-size:15px;color:var(--text2);">v1.1.0</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);">v1.2.0</div>
       </div>
       <div class="settings-row">
         <div class="settings-label" id="lbl-build">빌드</div>
-        <div style="font-family:'DM Mono',monospace;font-size:15px;color:var(--text2);">Daily Closing Checklist</div>
+        <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--text2);">Daily Closing Checklist</div>
       </div>
       <div class="settings-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
         <div class="settings-label" id="lbl-reset">데이터 초기화</div>
         <div class="settings-sublabel" id="lbl-resetSub">모든 기록과 설정이 삭제됩니다</div>
-        <button id="btn-resetAll" onclick="resetAll()" style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);color:var(--red);border-radius:var(--radius-sm);padding:8px 16px;font-family:'Noto Sans KR',sans-serif;font-size:15px;cursor:pointer;">전체 초기화</button>
+        <button id="btn-resetAll" onclick="resetAll()" style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);color:var(--red);border-radius:var(--radius-sm);padding:8px 16px;font-family:'Noto Sans KR',sans-serif;font-size:13px;cursor:pointer;">전체 초기화</button>
       </div>
     </div>
 
@@ -806,124 +714,257 @@ px;
 
 <div class="toast" id="toast"></div>
 
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, query, where, Timestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+/* ===== FIREBASE CONFIG ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDZE7APdSv7lDc4WjkTpUbO6n5g4CNtJtA",
+  authDomain: "walkie-app-cce83.firebaseapp.com",
+  projectId: "walkie-app-cce83",
+  storageBucket: "walkie-app-cce83.firebasestorage.app",
+  messagingSenderId: "661424641976",
+  appId: "1:661424641976:web:dcb28a7bdcba42c337e14d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+/* ===== COLLECTIONS ===== */
+const COL = 'closing_checklist';
+const STATE_DOC = 'app_state';
+
+/* ===== SYNC HELPERS ===== */
+function setSyncStatus(status) {
+  // status: 'syncing' | 'synced' | 'error' | 'offline'
+  const dot = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  if (!dot || !label) return;
+  dot.className = 'sync-dot ' + status;
+  const isEn = window._appLang === 'en';
+  const labels = {
+    syncing: isEn ? 'Syncing...' : '동기화 중...',
+    synced:  isEn ? 'Synced'     : '동기화 완료',
+    error:   isEn ? 'Sync error' : '동기화 오류',
+    offline: isEn ? 'Offline'    : '오프라인'
+  };
+  label.textContent = labels[status] || status;
+}
+
+/* ===== FIRESTORE SAVE STATE ===== */
+async function fsSaveState(state) {
+  setSyncStatus('syncing');
+  try {
+    await setDoc(doc(db, COL, STATE_DOC), {
+      restaurantName: state.restaurantName || '',
+      checklist: JSON.stringify(state.checklist || []),
+      workerName: state.workerName || '',
+      memo: state.memo || '',
+      schedule: JSON.stringify(state.schedule || {}),
+      langEN: !!state.langEN,
+      lightMode: !!state.lightMode,
+      updatedAt: Timestamp.now()
+    });
+    setSyncStatus('synced');
+  } catch(e) {
+    console.error('fsSaveState error:', e);
+    setSyncStatus('error');
+  }
+}
+
+/* ===== FIRESTORE LOAD STATE ===== */
+async function fsLoadState() {
+  try {
+    const snap = await getDoc(doc(db, COL, STATE_DOC));
+    if (snap.exists()) {
+      const d = snap.data();
+      return {
+        restaurantName: d.restaurantName || '',
+        checklist: JSON.parse(d.checklist || '[]'),
+        workerName: d.workerName || '',
+        memo: d.memo || '',
+        schedule: JSON.parse(d.schedule || '{}'),
+        langEN: !!d.langEN,
+        lightMode: !!d.lightMode,
+      };
+    }
+    return null;
+  } catch(e) {
+    console.error('fsLoadState error:', e);
+    setSyncStatus('error');
+    return null;
+  }
+}
+
+/* ===== FIRESTORE SAVE HISTORY ===== */
+async function fsSaveHistory(record) {
+  setSyncStatus('syncing');
+  try {
+    const docId = 'history_' + record.date.replace(/\./g, '-');
+    await setDoc(doc(db, COL, docId), {
+      date: record.date,
+      worker: record.worker || '',
+      memo: record.memo || '',
+      items: JSON.stringify(record.items || []),
+      restaurantName: record.restaurantName || '',
+      savedAt: Timestamp.now()
+    });
+    setSyncStatus('synced');
+  } catch(e) {
+    console.error('fsSaveHistory error:', e);
+    setSyncStatus('error');
+  }
+}
+
+/* ===== FIRESTORE LOAD HISTORY ===== */
+async function fsLoadHistory() {
+  try {
+    // Calculate 7-day cutoff
+    const cutoff = new Date();
+    if (cutoff.getHours() < 4) cutoff.setDate(cutoff.getDate() - 1);
+    cutoff.setDate(cutoff.getDate() - 7);
+    const cutoffStr = formatDateStr(cutoff);
+
+    const colRef = collection(db, COL);
+    const allDocs = await getDocs(colRef);
+    const records = [];
+
+    for (const d of allDocs.docs) {
+      if (!d.id.startsWith('history_')) continue;
+      const data = d.data();
+      if (!data.date || data.date < cutoffStr) {
+        // Delete old records
+        await deleteDoc(doc(db, COL, d.id));
+        continue;
+      }
+      records.push({
+        date: data.date,
+        worker: data.worker || '',
+        memo: data.memo || '',
+        items: JSON.parse(data.items || '[]'),
+        restaurantName: data.restaurantName || '',
+      });
+    }
+
+    records.sort((a, b) => b.date.localeCompare(a.date));
+    return records;
+  } catch(e) {
+    console.error('fsLoadHistory error:', e);
+    setSyncStatus('error');
+    return [];
+  }
+}
+
+function formatDateStr(d) {
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+
+/* ===== EXPOSE TO GLOBAL ===== */
+window.fsAPI = { fsLoadState, fsSaveState, fsSaveHistory, fsLoadHistory };
+window.dispatchEvent(new Event('firebase-ready'));
+
+</script>
+
 <script>
 /* ===== TRANSLATIONS ===== */
 const T = {
   ko: {
     headerTitle: '마감 체크리스트',
-    tab_record: '기록',
-    tab_history: '히스토리',
-    tab_settings: '설정',
-    lbl_worker: '담당자',
-    placeholder_worker: '이름을 입력하세요',
-    placeholder_addItem: '항목 추가...',
-    btn_add: '추가',
+    tab_record: '기록', tab_history: '히스토리', tab_settings: '설정',
+    lbl_worker: '담당자', placeholder_worker: '이름을 입력하세요',
+    placeholder_addItem: '항목 추가...', btn_add: '추가',
     btn_save: '✓ 오늘 마감 기록 저장',
     lbl_todayChecklist: '오늘의 체크리스트',
+    lbl_memo: '메모', placeholder_memo: '오늘 특이사항, 메모 등을 자유롭게 입력하세요...',
     lbl_noHistory: '아직 저장된 기록이 없습니다.',
-    lbl_grp_restaurant: '레스토랑 정보',
-    lbl_restaurantName: '레스토랑 이름',
+    lbl_grp_restaurant: '레스토랑 정보', lbl_restaurantName: '레스토랑 이름',
     placeholder_restaurant: '이름 입력',
     lbl_grp_display: '디스플레이',
-    lbl_langToggle: '영어 모드',
-    lbl_langSub: 'UI를 영어로 표시합니다',
-    lbl_themeToggle: '라이트 모드',
-    lbl_themeSub: '밝은 테마로 전환합니다',
-    lbl_grp_schedule: '요일별 특별 항목',
-    lbl_scheduleBtn: '요일별 특별 항목 관리',
-    lbl_grp_appinfo: '앱 정보',
-    lbl_version: '버전',
-    lbl_build: '빌드',
-    lbl_reset: '데이터 초기화',
-    lbl_resetSub: '모든 기록과 설정이 삭제됩니다',
+    lbl_langToggle: '영어 모드', lbl_langSub: 'UI를 영어로 표시합니다',
+    lbl_themeToggle: '라이트 모드', lbl_themeSub: '밝은 테마로 전환합니다',
+    lbl_grp_schedule: '요일별 특별 항목', lbl_scheduleBtn: '요일별 특별 항목 관리',
+    lbl_grp_appinfo: '앱 정보', lbl_version: '버전', lbl_build: '빌드',
+    lbl_reset: '데이터 초기화', lbl_resetSub: '모든 기록과 설정이 삭제됩니다',
     btn_resetAll: '전체 초기화',
-    modal_title: '요일별 특별 항목',
-    placeholder_dayItem: '항목 입력...',
-    btn_dayAdd: '추가',
-    btn_modalSave: '저장',
+    modal_title: '요일별 특별 항목', placeholder_dayItem: '항목 입력...',
+    btn_dayAdd: '추가', btn_modalSave: '저장',
     toast_noName: '담당자 이름을 입력해주세요',
     toast_saved: '✓ 기록이 저장되었습니다',
     toast_scheduleSaved: '요일별 항목이 저장되었습니다',
-    toast_reset: '초기화 완료',
-    confirm_reset: '모든 데이터를 초기화하시겠습니까?',
+    toast_reset: '초기화 완료', confirm_reset: '모든 데이터를 초기화하시겠습니까?',
     progress_done: (d,t,p) => `${d} / ${t} 완료 (${p}%)`,
     scheduled_label: (day) => `${day}요일 특별 항목`,
     day_empty: '등록된 항목이 없습니다',
     schedule_none: '등록된 특별 항목 없음',
     schedule_count: (day, n) => `${day}: ${n}개`,
     default_restaurant: 'DAILY RESTAURANT',
+    memo_label: '📝 메모',
     days: ['월','화','수','목','금','토','일'],
     days_full: ['월요일','화요일','수요일','목요일','금요일','토요일','일요일'],
   },
   en: {
     headerTitle: 'Closing Checklist',
-    tab_record: 'Record',
-    tab_history: 'History',
-    tab_settings: 'Settings',
-    lbl_worker: 'Staff',
-    placeholder_worker: 'Enter your name',
-    placeholder_addItem: 'Add item...',
-    btn_add: 'Add',
-    btn_save: '✓ Save Today\'s Closing Record',
+    tab_record: 'Record', tab_history: 'History', tab_settings: 'Settings',
+    lbl_worker: 'Staff', placeholder_worker: 'Enter your name',
+    placeholder_addItem: 'Add item...', btn_add: 'Add',
+    btn_save: "✓ Save Today's Closing Record",
     lbl_todayChecklist: "Today's Checklist",
+    lbl_memo: 'Memo', placeholder_memo: 'Notes, special events, anything to remember...',
     lbl_noHistory: 'No records saved yet.',
-    lbl_grp_restaurant: 'Restaurant Info',
-    lbl_restaurantName: 'Restaurant Name',
+    lbl_grp_restaurant: 'Restaurant Info', lbl_restaurantName: 'Restaurant Name',
     placeholder_restaurant: 'Enter name',
     lbl_grp_display: 'Display',
-    lbl_langToggle: 'English Mode',
-    lbl_langSub: 'Display UI in English',
-    lbl_themeToggle: 'Light Mode',
-    lbl_themeSub: 'Switch to light theme',
-    lbl_grp_schedule: 'Day-Specific Tasks',
-    lbl_scheduleBtn: 'Manage Day-Specific Tasks',
-    lbl_grp_appinfo: 'App Info',
-    lbl_version: 'Version',
-    lbl_build: 'Build',
-    lbl_reset: 'Reset Data',
-    lbl_resetSub: 'All records and settings will be deleted',
+    lbl_langToggle: 'English Mode', lbl_langSub: 'Display UI in English',
+    lbl_themeToggle: 'Light Mode', lbl_themeSub: 'Switch to light theme',
+    lbl_grp_schedule: 'Day-Specific Tasks', lbl_scheduleBtn: 'Manage Day-Specific Tasks',
+    lbl_grp_appinfo: 'App Info', lbl_version: 'Version', lbl_build: 'Build',
+    lbl_reset: 'Reset Data', lbl_resetSub: 'All records and settings will be deleted',
     btn_resetAll: 'Reset All',
-    modal_title: 'Day-Specific Tasks',
-    placeholder_dayItem: 'Enter task...',
-    btn_dayAdd: 'Add',
-    btn_modalSave: 'Save',
+    modal_title: 'Day-Specific Tasks', placeholder_dayItem: 'Enter task...',
+    btn_dayAdd: 'Add', btn_modalSave: 'Save',
     toast_noName: 'Please enter staff name',
     toast_saved: '✓ Record saved',
     toast_scheduleSaved: 'Day-specific tasks saved',
-    toast_reset: 'Reset complete',
-    confirm_reset: 'Reset all data?',
+    toast_reset: 'Reset complete', confirm_reset: 'Reset all data?',
     progress_done: (d,t,p) => `${d} / ${t} done (${p}%)`,
     scheduled_label: (day) => `${day} Special Tasks`,
     day_empty: 'No tasks added yet',
     schedule_none: 'No day-specific tasks',
     schedule_count: (day, n) => `${day}: ${n}`,
     default_restaurant: 'DAILY RESTAURANT',
+    memo_label: '📝 Memo',
     days: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
     days_full: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
   }
 };
 
 let lang = 'ko';
+window._appLang = 'ko';
 function t(key, ...args) {
   const val = T[lang][key];
   if (typeof val === 'function') return val(...args);
-  return val || key;
+  return val !== undefined ? val : key;
 }
 
 /* ===== STATE ===== */
-const DAYS_KO = ['월','화','수','목','금','토','일'];
 const DAY_KEYS = ['mon','tue','wed','thu','fri','sat','sun'];
 
 let state = {
   restaurantName: '',
   checklist: [],
   workerName: '',
+  memo: '',
   schedule: { mon:[], tue:[], wed:[], thu:[], fri:[], sat:[], sun:[] },
   langEN: false,
   lightMode: false
 };
 let history = [];
 let currentDay = 0;
+let fsAPI = null;
+let _memoSaveTimer = null;
 
 /* ===== DATE UTILS ===== */
 function getBusinessDate() {
@@ -937,51 +978,81 @@ function formatDate(d) {
 function getDayOfWeek(d) { return (d.getDay() + 6) % 7; }
 function getTodayKey() { return formatDate(getBusinessDate()); }
 
-/* ===== STORAGE ===== */
-function load() {
+/* ===== SAVE (Firestore + localStorage fallback) ===== */
+function saveLocal() {
+  localStorage.setItem('dcc_state', JSON.stringify(state));
+  localStorage.setItem('dcc_history', JSON.stringify(history));
+}
+async function save() {
+  saveLocal();
+  if (fsAPI) await fsAPI.fsSaveState(state);
+}
+
+/* ===== LOAD ===== */
+async function load() {
+  // 1. Load from localStorage first (instant)
   const s = localStorage.getItem('dcc_state');
   const h = localStorage.getItem('dcc_history');
   const lastDate = localStorage.getItem('dcc_lastDate');
-  if (s) state = {...state, ...JSON.parse(s)};
+  if (s) state = { ...state, ...JSON.parse(s) };
   if (h) history = JSON.parse(h);
+
+  // 2. Try Firestore if available
+  if (fsAPI) {
+    const fsState = await fsAPI.fsLoadState();
+    if (fsState) state = { ...state, ...fsState };
+    history = await fsAPI.fsLoadHistory();
+    saveLocal();
+  }
+
   const todayKey = getTodayKey();
+
+  // 3. Date rollover check
   if (lastDate && lastDate !== todayKey) {
-    const oldState = JSON.parse(s || '{}');
+    const oldState = s ? JSON.parse(s) : state;
     if (oldState.checklist && oldState.checklist.length > 0) {
-      history.unshift({
+      const record = {
         date: lastDate,
         worker: oldState.workerName || '—',
-        items: JSON.parse(JSON.stringify(oldState.checklist)),
+        memo: oldState.memo || '',
+        items: oldState.checklist.map(i => ({ text: i.text, checked: i.checked })),
         restaurantName: oldState.restaurantName || ''
-      });
+      };
+      // Save auto-rollover record to history
+      const existing = history.findIndex(r => r.date === lastDate);
+      if (existing < 0) {
+        history.unshift(record);
+        if (fsAPI) await fsAPI.fsSaveHistory(record);
+      }
     }
-    state.checklist = state.checklist.map(i => ({...i, checked: false}));
+    state.checklist = state.checklist.map(i => ({ ...i, checked: false }));
     state.workerName = '';
+    state.memo = '';
     localStorage.setItem('dcc_lastDate', todayKey);
+    if (fsAPI) await fsAPI.fsSaveState(state);
   } else if (!lastDate) {
     localStorage.setItem('dcc_lastDate', todayKey);
   }
-  // 7일 초과 히스토리 삭제
+
+  // 4. Purge old local history (7 days)
   const cutoff = new Date(getBusinessDate());
   cutoff.setDate(cutoff.getDate() - 7);
   const cutoffStr = formatDate(cutoff);
   history = history.filter(r => r.date >= cutoffStr);
-  localStorage.setItem('dcc_history', JSON.stringify(history));
-  save();
+  saveLocal();
 }
-function save() { localStorage.setItem('dcc_state', JSON.stringify(state)); }
 
 /* ===== LANG & THEME ===== */
 function applyLang() {
   state.langEN = document.getElementById('toggleLang').checked;
   lang = state.langEN ? 'en' : 'ko';
+  window._appLang = lang;
   save();
   applyI18n();
   renderChecklist();
   renderHistory();
   updateSchedulePreview();
 }
-
 function applyTheme() {
   state.lightMode = document.getElementById('toggleTheme').checked;
   save();
@@ -1006,6 +1077,8 @@ function applyI18n() {
   document.getElementById('btn-add').textContent = t('btn_add');
   document.getElementById('btn-save').textContent = t('btn_save');
   document.getElementById('lbl-todayChecklist').textContent = t('lbl_todayChecklist');
+  document.getElementById('lbl-memo').textContent = t('lbl_memo');
+  document.getElementById('memoInput').placeholder = t('placeholder_memo');
   document.getElementById('lbl-grp-restaurant').textContent = t('lbl_grp_restaurant');
   document.getElementById('lbl-restaurantName').textContent = t('lbl_restaurantName');
   document.getElementById('restaurantNameInput').placeholder = t('placeholder_restaurant');
@@ -1027,18 +1100,13 @@ function applyI18n() {
   document.getElementById('btn-dayAdd').textContent = t('btn_dayAdd');
   document.getElementById('btn-modalSave').textContent = t('btn_modalSave');
 
-  // Header date with localized day
   document.getElementById('headerDate').textContent = formatDate(d) + ' (' + dayName + ')';
+  document.getElementById('headerRestaurantName').textContent = state.restaurantName || t('default_restaurant');
 
-  // Lang toggle status
   const langSt = document.getElementById('langStatus');
   langSt.textContent = state.langEN ? 'ON' : 'OFF';
   langSt.className = 'toggle-status' + (state.langEN ? ' on' : '');
 
-  // Header restaurant name
-  document.getElementById('headerRestaurantName').textContent = state.restaurantName || t('default_restaurant');
-
-  // Scheduled section label refresh
   const schLabel = document.getElementById('scheduledLabel');
   if (schLabel) schLabel.textContent = t('scheduled_label', dayName);
 }
@@ -1046,8 +1114,8 @@ function applyI18n() {
 /* ===== RENDER ===== */
 function render() {
   lang = state.langEN ? 'en' : 'ko';
+  window._appLang = lang;
 
-  // Toggle states
   document.getElementById('toggleLang').checked = !!state.langEN;
   document.getElementById('toggleTheme').checked = !!state.lightMode;
   document.body.classList.toggle('light-mode', !!state.lightMode);
@@ -1061,6 +1129,7 @@ function render() {
 
   document.getElementById('workerName').value = state.workerName || '';
   document.getElementById('restaurantNameInput').value = state.restaurantName || '';
+  document.getElementById('memoInput').value = state.memo || '';
 
   applyI18n();
   renderChecklist();
@@ -1072,7 +1141,7 @@ function render() {
 function renderChecklist() {
   const container = document.getElementById('checklistContainer');
   container.innerHTML = '';
-  state.checklist.filter(i => !i.isScheduled).forEach((item, idx) => {
+  state.checklist.filter(i => !i.isScheduled).forEach((item) => {
     const realIdx = state.checklist.indexOf(item);
     const div = document.createElement('div');
     div.className = 'check-item' + (item.checked ? ' completed' : '');
@@ -1088,7 +1157,7 @@ function renderChecklist() {
     container.appendChild(div);
   });
 
-  // Scheduled items for today
+  // Scheduled items
   const todayDow = getDayOfWeek(getBusinessDate());
   const dayKey = DAY_KEYS[todayDow];
   const scheduled = state.schedule[dayKey] || [];
@@ -1099,8 +1168,7 @@ function renderChecklist() {
 
   if (scheduled.length > 0) {
     secEl.style.display = 'block';
-    const dayName = T[lang].days[todayDow];
-    schLabel.textContent = t('scheduled_label', dayName);
+    schLabel.textContent = t('scheduled_label', T[lang].days[todayDow]);
     scheduled.forEach((text, idx) => {
       const key = 'sched_' + dayKey + '_' + idx;
       const existing = state.checklist.find(i => i.id === key);
@@ -1146,6 +1214,14 @@ function addItem() {
 }
 document.getElementById('newItemInput').addEventListener('keydown', e => { if (e.key === 'Enter') addItem(); });
 
+// Memo — debounced auto-save
+document.getElementById('memoInput').addEventListener('input', function() {
+  state.memo = this.value;
+  saveLocal(); // instant local
+  clearTimeout(_memoSaveTimer);
+  _memoSaveTimer = setTimeout(() => { if (fsAPI) fsAPI.fsSaveState(state); }, 1500);
+});
+
 function updateProgress() {
   const todayDow = getDayOfWeek(getBusinessDate());
   const dayKey = DAY_KEYS[todayDow];
@@ -1159,10 +1235,12 @@ function updateProgress() {
   document.getElementById('progressLabel').textContent = t('progress_done', done, total, pct);
 }
 
-function saveRecord() {
+async function saveRecord() {
   const name = document.getElementById('workerName').value.trim();
   if (!name) { showToast(t('toast_noName')); return; }
   state.workerName = name;
+  state.memo = document.getElementById('memoInput').value;
+
   const todayKey = getTodayKey();
   const todayDow = getDayOfWeek(getBusinessDate());
   const dayKey = DAY_KEYS[todayDow];
@@ -1175,12 +1253,22 @@ function saveRecord() {
       return { text: text + ' ★', checked: found ? found.checked : false };
     })
   ];
-  const existing = history.findIndex(h => h.date === todayKey);
-  const record = { date: todayKey, worker: name, items: allItems, restaurantName: state.restaurantName || '' };
+  const record = {
+    date: todayKey,
+    worker: name,
+    memo: state.memo,
+    items: allItems,
+    restaurantName: state.restaurantName || ''
+  };
+  const existing = history.findIndex(r => r.date === todayKey);
   if (existing >= 0) history[existing] = record;
   else history.unshift(record);
-  localStorage.setItem('dcc_history', JSON.stringify(history));
-  save();
+
+  saveLocal();
+  if (fsAPI) {
+    await fsAPI.fsSaveState(state);
+    await fsAPI.fsSaveHistory(record);
+  }
   renderHistory();
   showToast(t('toast_saved'));
 }
@@ -1199,11 +1287,16 @@ function renderHistory() {
     const isComplete = pct === 100;
     const card = document.createElement('div');
     card.className = 'history-card';
+    const memoHtml = rec.memo ? `
+      <div class="history-memo">
+        <div class="history-memo-label">${t('memo_label')}</div>
+        ${escHtml(rec.memo)}
+      </div>` : '';
     card.innerHTML = `
       <div class="history-card-header" id="hh_${ri}" onclick="toggleHistory(${ri})">
         <div>
           <div class="history-card-date">${rec.date}</div>
-          <div class="history-worker" style="margin-top:3px;">${rec.worker}</div>
+          <div class="history-worker" style="margin-top:3px;">${escHtml(rec.worker)}</div>
         </div>
         <div class="history-card-meta">
           <span class="history-badge ${isComplete ? 'badge-green' : 'badge-amber'}">${done}/${total} (${pct}%)</span>
@@ -1217,6 +1310,7 @@ function renderHistory() {
             <span style="color:${item.checked ? 'var(--text2)' : 'var(--text3)'};${item.checked ? '' : 'text-decoration:line-through'}">${escHtml(item.text)}</span>
           </div>
         `).join('')}
+        ${memoHtml}
       </div>
     `;
     container.appendChild(card);
@@ -1240,22 +1334,18 @@ document.getElementById('restaurantNameInput').addEventListener('input', functio
   document.getElementById('headerRestaurantName').textContent = this.value || t('default_restaurant');
 });
 document.getElementById('workerName').addEventListener('input', function() {
-  state.workerName = this.value; save();
+  state.workerName = this.value; saveLocal();
 });
 
 // SCHEDULE MODAL
 let modalSchedule = {};
-
 function openScheduleModal() {
   modalSchedule = JSON.parse(JSON.stringify(state.schedule));
   currentDay = 0;
-  renderDayTabs();
-  renderDayItems();
+  renderDayTabs(); renderDayItems();
   document.getElementById('scheduleModal').classList.add('open');
 }
-function closeScheduleModal() {
-  document.getElementById('scheduleModal').classList.remove('open');
-}
+function closeScheduleModal() { document.getElementById('scheduleModal').classList.remove('open'); }
 function renderDayTabs() {
   const container = document.getElementById('dayTabs');
   container.innerHTML = '';
@@ -1272,17 +1362,11 @@ function renderDayItems() {
   const items = modalSchedule[key] || [];
   const container = document.getElementById('dayItemsList');
   container.innerHTML = '';
-  if (items.length === 0) {
-    container.innerHTML = `<div class="day-empty">${t('day_empty')}</div>`;
-    return;
-  }
+  if (items.length === 0) { container.innerHTML = `<div class="day-empty">${t('day_empty')}</div>`; return; }
   items.forEach((text, idx) => {
     const row = document.createElement('div');
     row.className = 'day-item-row';
-    row.innerHTML = `
-      <span class="day-item-text">${escHtml(text)}</span>
-      <button class="day-item-del" onclick="deleteDayItem(${idx})">✕</button>
-    `;
+    row.innerHTML = `<span class="day-item-text">${escHtml(text)}</span><button class="day-item-del" onclick="deleteDayItem(${idx})">✕</button>`;
     container.appendChild(row);
   });
 }
@@ -1297,42 +1381,32 @@ function addDayItem() {
   renderDayItems();
 }
 document.getElementById('dayItemInput').addEventListener('keydown', e => { if (e.key === 'Enter') addDayItem(); });
-function deleteDayItem(idx) {
-  modalSchedule[DAY_KEYS[currentDay]].splice(idx, 1);
-  renderDayItems();
-}
+function deleteDayItem(idx) { modalSchedule[DAY_KEYS[currentDay]].splice(idx, 1); renderDayItems(); }
 function saveSchedule() {
   state.schedule = JSON.parse(JSON.stringify(modalSchedule));
-  save();
-  updateSchedulePreview();
-  renderChecklist();
-  updateProgress();
-  closeScheduleModal();
-  showToast(t('toast_scheduleSaved'));
+  save(); updateSchedulePreview(); renderChecklist(); updateProgress();
+  closeScheduleModal(); showToast(t('toast_scheduleSaved'));
 }
 function updateSchedulePreview() {
   const preview = document.getElementById('schedulePreview');
   const parts = [];
   T[lang].days.forEach((day, i) => {
-    const key = DAY_KEYS[i];
-    const count = (state.schedule[key] || []).length;
+    const count = (state.schedule[DAY_KEYS[i]] || []).length;
     if (count > 0) parts.push(t('schedule_count', day, count));
   });
   preview.textContent = parts.length > 0 ? parts.join('  ·  ') : t('schedule_none');
 }
 
-function resetAll() {
+async function resetAll() {
   if (!confirm(t('confirm_reset'))) return;
   localStorage.clear();
   state = {
-    restaurantName: '',
-    checklist: [],
-    workerName: '',
+    restaurantName: '', checklist: [], workerName: '', memo: '',
     schedule: { mon:[], tue:[], wed:[], thu:[], fri:[], sat:[], sun:[] },
-    langEN: false,
-    lightMode: false
+    langEN: false, lightMode: false
   };
   history = [];
+  if (fsAPI) await fsAPI.fsSaveState(state);
   render();
   showToast(t('toast_reset'));
 }
@@ -1343,35 +1417,51 @@ function switchTab(tab) {
   document.getElementById('tab-' + tab).classList.add('active');
   document.getElementById('tabBtn-' + tab).classList.add('active');
 }
-
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 function escHtml(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function escJs(str) {
-  return String(str).replace(/'/g,"\\'").replace(/\\/g,'\\\\');
+function escJs(str) { return String(str).replace(/'/g,"\\'").replace(/\\/g,'\\\\'); }
+document.getElementById('scheduleModal').addEventListener('click', function(e) { if (e.target === this) closeScheduleModal(); });
+
+/* ===== INIT ===== */
+// Wait for Firebase module to be ready, then load & render
+async function init() {
+  // Render immediately from localStorage so UI isn't blank
+  const s = localStorage.getItem('dcc_state');
+  if (s) state = { ...state, ...JSON.parse(s) };
+  const h = localStorage.getItem('dcc_history');
+  if (h) history = JSON.parse(h);
+  render();
+
+  // Then load full (including Firestore) once Firebase is ready
+  window.addEventListener('firebase-ready', async () => {
+    fsAPI = window.fsAPI;
+    await load();
+    render();
+  }, { once: true });
+
+  // Fallback: if firebase-ready fires before this listener (unlikely but safe)
+  if (window.fsAPI) {
+    fsAPI = window.fsAPI;
+    await load();
+    render();
+  }
 }
+init();
 
-document.getElementById('scheduleModal').addEventListener('click', function(e) {
-  if (e.target === this) closeScheduleModal();
-});
-
-// INIT
-load();
-render();
-
-// 날짜 변경 자동 감지 — 1분마다 + 화면 복귀 시 즉시 체크 (아이패드 대응)
+// 날짜 변경 자동 감지 — 1분마다 + 화면 복귀 시 (아이패드 대응)
 let _lastCheckedDate = getTodayKey();
-function checkDateChange() {
+async function checkDateChange() {
   const now = getTodayKey();
   if (now !== _lastCheckedDate) {
     _lastCheckedDate = now;
-    load();
+    await load();
     render();
   }
 }
